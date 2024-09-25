@@ -2,10 +2,39 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.App {
+  text-align: center;
 }
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%; /* Hace que los inputs ocupen todo el ancho disponible */
+  box-sizing: border-box; /* Asegura que el padding se incluya en el ancho total */
+  padding: 8px; /* Agrega un poco de padding para mejorar la apariencia */
+}
+
+table {
+  width: 80%;
+  margin: 20px auto;
+  border-collapse: collapse; /* Remove space between borders */
+}
+
+th, td {
+  padding: 12px; /* Add padding for better spacing */
+  border: 1px solid #ddd; /* Add borders to table cells */
+  text-align: left; /* Align text to the left */
+}
+
+th {
+  background-color: #282c34; /* Header background color */
+  color: white; /* Header text color */
+}
+
+tr:hover {
+  background-color: #f2f2f2; /* Highlight row on hover */
+}
+
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
