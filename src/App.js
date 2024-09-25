@@ -3,45 +3,49 @@ import './App.css'; // Import the CSS file
 import { getAll, deleteById, post, put } from './memdb'; // Import functions from memdb.js
 
 const App = () => {
-  const [customers, setCustomers] = useState([]); // Initialize customers with an empty array
+  const [customers, setCustomers] = useState([]); // Inicialitzar customers amb un array buit
+  const [title, setTitle] = useState("Add"); // Títol inicial
   const blankCustomer = { id: -1, name: '', email: '', password: '' };
   const [selectedCustomer, setSelectedCustomer] = useState(blankCustomer);
   const [formData, setFormData] = useState(blankCustomer);
 
-  // Function to retrieve customers
+  // Funció per recuperar els clients
   const getCustomers = function() {
-    console.log("in getCustomers()"); // Log message for debugging
-    const initialCustomers = getAll(); // Fetch all customers
-    setCustomers(initialCustomers); // Set the customers state with the retrieved customers
+    console.log("in getCustomers()"); // Missatge de registre per a depuració
+    const initialCustomers = getAll(); // Obtenir tots els clients
+    setCustomers(initialCustomers); // Establir l'estat dels clients
   };
 
-  // Fetch customers when the component mounts
+  // Recuperar clients quan el component es munta
   useEffect(() => {
-    getCustomers(); // Call getCustomers to populate customer list
-  }, []); // Empty dependency array means this runs once on mount
+    getCustomers(); // Cridar a getCustomers per omplir la llista de clients
+  }, []); // Array de dependències buit significa que això s'executa només un cop en muntar
 
   const onDeleteClick = () => {
     console.log('onDeleteClick()');
-    deleteById(selectedCustomer.id); // Delete the selected customer
-    setCustomers(getAll()); // Refresh the customer list
+    deleteById(selectedCustomer.id); // Esborrar el client seleccionat
+    setCustomers(getAll()); // Actualitzar la llista de clients
     setSelectedCustomer(blankCustomer);
     setFormData(blankCustomer);
+    setTitle("Add"); // Restablir el títol a "Add"
   };
 
   const onSaveClick = () => {
     console.log('onSaveClick()', formData);
     if (selectedCustomer.id === -1) {
-      post(formData); // Add a new customer
+      post(formData); // Afegir un nou client
     } else {
-      put(selectedCustomer.id, formData); // Update existing customer
+      put(selectedCustomer.id, formData); // Actualitzar el client existent
     }
-    setCustomers(getAll()); // Refresh the customer list
+    setCustomers(getAll()); // Actualitzar la llista de clients
+    setTitle("Add"); // Restablir el títol a "Add" després de guardar
   };
 
   const onCancelClick = () => {
     console.log('onCancelClick()');
     setSelectedCustomer(blankCustomer);
     setFormData(blankCustomer);
+    setTitle("Add"); // Restablir el títol a "Add" quan s'cancela
   };
 
   const handleListClick = (customer) => {
@@ -51,6 +55,7 @@ const App = () => {
       email: customer.email,
       password: customer.password,
     });
+    setTitle("Update"); // Canviar el títol a "Update" quan es selecciona un client
   };
 
   const handleInputChange = (e) => {
@@ -64,6 +69,7 @@ const App = () => {
   return (
     <div className="App">
       <h1>React App</h1>
+
       <h2>Customers List</h2>
       <table>
         <thead>
@@ -91,7 +97,7 @@ const App = () => {
         </tbody>
       </table>
 
-      <h2>Add Customer</h2>
+      <h2>{title} Customer</h2> {/* Mostrar el títol dinàmicament */}
       <table>
         <tbody>
           <tr>
