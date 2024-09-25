@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import './App.css'; // Import the CSS file
 
 const App = () => {
-  // Static array of customers, including a blank customer for internal use
   const blankCustomer = { id: -1, name: '', email: '', password: '' }; // Internal use only
   const customers = [
     { id: 1, name: 'Alice', email: 'alice@example.com', password: 'password123' },
@@ -10,19 +9,14 @@ const App = () => {
     { id: 3, name: 'Charlie', email: 'charlie@example.com', password: 'password789' },
   ];
 
-  // State to track the selected customer and form data
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
-  const [formData, setFormData] = useState({
-    name: '', // Default name
-    email: '',
-    password: '',
-  });
+  const [selectedCustomer, setSelectedCustomer] = useState(blankCustomer);
+  const [formData, setFormData] = useState(blankCustomer);
 
-  // Function stubs for button actions
   const onDeleteClick = () => {
     console.log('onDeleteClick()');
-    setSelectedCustomer(null); // Clear selection after delete
-    setFormData(blankCustomer); // Reset to blank customer values
+    // Add logic to delete the selected customer from the list if needed
+    setSelectedCustomer(blankCustomer);
+    setFormData(blankCustomer);
   };
 
   const onSaveClick = () => {
@@ -32,29 +26,19 @@ const App = () => {
 
   const onCancelClick = () => {
     console.log('onCancelClick()');
-    setSelectedCustomer(null); // Clear selection on cancel
-    setFormData(blankCustomer); // Reset to blank customer values
+    setSelectedCustomer(blankCustomer); // Reset to no customer selected
+    setFormData(blankCustomer); // Reset form values
   };
 
-  // Handle click on a customer in the list
   const handleListClick = (customer) => {
-    if (selectedCustomer && selectedCustomer.id === customer.id) {
-      // If the same customer is clicked again, deselect it
-      setSelectedCustomer(null);
-      setFormData(blankCustomer); // Reset to blank customer values
-    } else {
-      // Select the clicked customer
-      setSelectedCustomer(customer);
-      // Update the form data with the selected customer's details
-      setFormData({
-        name: customer.name,
-        email: customer.email,
-        password: customer.password,
-      });
-    }
+    setSelectedCustomer(customer);
+    setFormData({
+      name: customer.name,
+      email: customer.email,
+      password: customer.password,
+    });
   };
 
-  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -82,8 +66,8 @@ const App = () => {
               key={customer.id}
               onClick={() => handleListClick(customer)}
               style={{
-                fontWeight: selectedCustomer && selectedCustomer.id === customer.id ? 'bold' : 'normal',
-                cursor: 'pointer', // Change cursor to pointer for better UX
+                fontWeight: selectedCustomer.id === customer.id ? 'bold' : 'normal',
+                cursor: 'pointer',
               }}
             >
               <td>{customer.name}</td>
