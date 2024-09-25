@@ -2,9 +2,15 @@
   text-align: center;
 }
 
-.App {
-  text-align: center;
+.customer-list-container {
+  height: 300px; /* Set a fixed height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  border: 1px solid #ccc; /* Optional: Add a border */
+  margin-bottom: 20px; /* Optional: Add some space below */
 }
+
+/* Add other existing styles here */
+
 
 input[type="text"],
 input[type="email"],

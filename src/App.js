@@ -1,4 +1,3 @@
-// App.js
 import React, { useState, useEffect } from 'react';
 import './App.css'; // Import the CSS file
 import { getAll, deleteById, post, put } from './memdb'; // Import functions from memdb.js
@@ -7,16 +6,19 @@ import CustomerAddUpdateForm from './customerAddUpdateForm'; // Import CustomerA
 
 const App = () => {
   const [customers, setCustomers] = useState([]); // Initialize customers with an empty array
+  const [filteredCustomers, setFilteredCustomers] = useState([]); // Initialize filtered customers
   const [mode, setMode] = useState("Add"); // Initialize mode as "Add"
   const blankCustomer = { id: -1, name: '', email: '', password: '' };
   const [selectedCustomer, setSelectedCustomer] = useState(blankCustomer);
   const [formData, setFormData] = useState(blankCustomer);
+  const [searchTerm, setSearchTerm] = useState(''); // Initialize search term
 
   // Function to retrieve customers
-  const getCustomers = () => {
+  const getCustomers = async () => {
     console.log("in getCustomers()"); // Log message for debugging
-    const initialCustomers = getAll(); // Fetch all customers
+    const initialCustomers = await getAll(); // Fetch all customers
     setCustomers(initialCustomers); // Set the customers state
+    setFilteredCustomers(initialCustomers); // Set filtered customers to all initially
   };
 
   // Fetch customers when the component mounts
@@ -32,7 +34,7 @@ const App = () => {
     }
 
     deleteById(selectedCustomer.id); // Delete the selected customer
-    setCustomers(getAll()); // Refresh the customer list
+    getCustomers(); // Refresh the customer list
     setSelectedCustomer(blankCustomer);
     setFormData(blankCustomer);
     setMode("Add"); // Reset the mode to "Add"
@@ -47,7 +49,7 @@ const App = () => {
     }
     setFormData(blankCustomer); // Clear the form
     setSelectedCustomer(blankCustomer); // Deselect any selected customer
-    setCustomers(getAll()); // Refresh the customer list
+    getCustomers(); // Refresh the customer list
     setMode("Add"); // Optionally reset the mode to "Add" after saving
   };
 
@@ -85,11 +87,34 @@ const App = () => {
     setFormData(newFormObject); // Update the state with new form data
   };
 
+  const handleSearch = () => {
+    const filtered = customers.filter(customer =>
+      customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      customer.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredCustomers(filtered); // Update filtered customers
+  };
+
+  const handleCancelSearch = () => {
+    setSearchTerm(''); // Clear search term
+    setFilteredCustomers(customers); // Reset filtered customers to all customers
+  };
+
   return (
     <div className="App">
       <h1>React App</h1>
+      <div>
+        <input
+          type="text"
+          placeholder="Buscar..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button onClick={handleSearch}>Buscar</button>
+        <button onClick={handleCancelSearch}>Cancelar</button>
+      </div>
       <CustomerList
-        customers={customers}
+        customers={filteredCustomers} // Use filtered customers
         handleListClick={handleListClick}
         selectedCustomer={selectedCustomer} // Pass selectedCustomer to CustomerList
       />
