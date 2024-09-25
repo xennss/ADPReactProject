@@ -3,23 +3,23 @@ import './App.css'; // Import the CSS file
 import { getAll, deleteById, post, put } from './memdb'; // Import functions from memdb.js
 
 const App = () => {
-  const [customers, setCustomers] = useState([]); // Inicialitzar customers amb un array buit
-  const [title, setTitle] = useState("Add"); // Títol inicial
+  const [customers, setCustomers] = useState([]); // Initialize customers with an empty array
+  const [mode, setMode] = useState("Add"); // Initialize mode as "Add"
   const blankCustomer = { id: -1, name: '', email: '', password: '' };
   const [selectedCustomer, setSelectedCustomer] = useState(blankCustomer);
   const [formData, setFormData] = useState(blankCustomer);
 
-  // Funció per recuperar els clients
-  const getCustomers = function() {
-    console.log("in getCustomers()"); // Missatge de registre per a depuració
-    const initialCustomers = getAll(); // Obtenir tots els clients
-    setCustomers(initialCustomers); // Establir l'estat dels clients
+  // Function to retrieve customers
+  const getCustomers = () => {
+    console.log("in getCustomers()"); // Log message for debugging
+    const initialCustomers = getAll(); // Fetch all customers
+    setCustomers(initialCustomers); // Set the customers state
   };
 
-  // Recuperar clients quan el component es munta
+  // Fetch customers when the component mounts
   useEffect(() => {
-    getCustomers(); // Cridar a getCustomers per omplir la llista de clients
-  }, []); // Array de dependències buit significa que això s'executa només un cop en muntar
+    getCustomers(); // Call getCustomers to populate customer list
+  }, []); // Empty dependency array means this runs once on mount
 
   const onDeleteClick = () => {
     console.log('onDeleteClick()');
@@ -30,47 +30,67 @@ const App = () => {
       return; // Exit the function if no customer is selected
     }
 
-    deleteById(selectedCustomer.id); // Esborrar el client seleccionat
-    setCustomers(getAll()); // Actualitzar la llista de clients
+    // Proceed with deletion
+    deleteById(selectedCustomer.id); // Delete the selected customer
+    setCustomers(getAll()); // Refresh the customer list
     setSelectedCustomer(blankCustomer);
     setFormData(blankCustomer);
-    setTitle("Add"); // Restablir el títol a "Add"
+    setMode("Add"); // Reset the mode to "Add"
   };
 
   const onSaveClick = () => {
-    console.log('onSaveClick()', formData);
-    if (selectedCustomer.id === -1) {
-      post(formData); // Afegir un nou client
-    } else {
-      put(selectedCustomer.id, formData); // Actualitzar el client existent
+    console.log('in onSaveClick()', formData);
+
+    if (mode === "Add") {
+        post(formData); // Add a new customer
+    } else if (mode === "Update") {
+        put(selectedCustomer.id, formData); // Update the existing customer
     }
-    setCustomers(getAll()); // Actualitzar la llista de clients
-    setTitle("Add"); // Restablir el títol a "Add" després de guardar
-  };
+
+    // Clear the form and reset to the blank customer
+    setFormData(blankCustomer); // Reset the form data
+    setSelectedCustomer(blankCustomer); // Deselect any selected customer
+    setCustomers(getAll()); // Refresh the customer list
+    setMode("Add"); // Optionally reset the mode to "Add" after saving
+};
+
+  
 
   const onCancelClick = () => {
     console.log('onCancelClick()');
     setSelectedCustomer(blankCustomer);
     setFormData(blankCustomer);
-    setTitle("Add"); // Restablir el títol a "Add" quan s'cancela
+    setMode("Add"); // Reset the mode to "Add" when canceled
   };
 
   const handleListClick = (customer) => {
-    setSelectedCustomer(customer);
-    setFormData({
-      name: customer.name,
-      email: customer.email,
-      password: customer.password,
-    });
-    setTitle("Update"); // Canviar el títol a "Update" quan es selecciona un client
+    if (selectedCustomer.id === customer.id) {
+      // Deselect if the same customer is clicked again
+      setSelectedCustomer(blankCustomer);
+      setFormData(blankCustomer);
+      setMode("Add"); // Reset the mode to "Add"
+    } else {
+      // Select the clicked customer
+      setSelectedCustomer(customer);
+      setFormData({
+        name: customer.name,
+        email: customer.email,
+        password: customer.password,
+      });
+      setMode("Update"); // Change the mode to "Update" when selecting a customer
+    }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  const handleInputChange = (event) => {
+    console.log("in handleInputChange()"); // Log for debugging
+    const name = event.target.name; // Get the name of the input field
+    const value = event.target.value; // Get the value from the input field
+
+    // Clone the current form data and update the specific field
+    let newFormObject = { ...formData }; // Assuming formData is your state variable
+    newFormObject[name] = value; // Update the property that changed
+
+    setFormData(newFormObject); // Update the state with the new form data
   };
 
   return (
@@ -104,7 +124,7 @@ const App = () => {
         </tbody>
       </table>
 
-      <h2>{title} Customer</h2> {/* Mostrar el títol dinàmicament */}
+      <h2>{mode} Customer</h2> {/* Use the mode in the form title */}
       <table>
         <tbody>
           <tr>
@@ -114,8 +134,10 @@ const App = () => {
                 <input
                   type="text"
                   name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
+                  onChange={handleInputChange} // Call the handler on change
+                  value={formData.name} // Bind the input value to formData
+                  placeholder="Customer Name"
+                  required
                 />
               </label>
             </td>
@@ -127,8 +149,10 @@ const App = () => {
                 <input
                   type="email"
                   name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
+                  onChange={handleInputChange} // Call the handler on change
+                  value={formData.email} // Bind the input value to formData
+                  placeholder="Customer Email"
+                  required
                 />
               </label>
             </td>
@@ -140,8 +164,10 @@ const App = () => {
                 <input
                   type="password"
                   name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
+                  onChange={handleInputChange} // Call the handler on change
+                  value={formData.password} // Bind the input value to formData
+                  placeholder="Customer Password"
+                  required
                 />
               </label>
             </td>
