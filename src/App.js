@@ -23,6 +23,13 @@ const App = () => {
 
   const onDeleteClick = () => {
     console.log('onDeleteClick()');
+
+    // Check if a customer is selected
+    if (selectedCustomer.id === -1) {
+      console.log('No customer selected for deletion.');
+      return; // Exit the function if no customer is selected
+    }
+
     deleteById(selectedCustomer.id); // Esborrar el client seleccionat
     setCustomers(getAll()); // Actualitzar la llista de clients
     setSelectedCustomer(blankCustomer);
