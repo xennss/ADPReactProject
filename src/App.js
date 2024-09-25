@@ -1,33 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css'; // Import the CSS file
+import { getAll, deleteById, post, put } from './memdb'; // Import functions from memdb.js
 
 const App = () => {
-  const blankCustomer = { id: -1, name: '', email: '', password: '' }; // Internal use only
-  const customers = [
-    { id: 1, name: 'Alice', email: 'alice@example.com', password: 'password123' },
-    { id: 2, name: 'Bob', email: 'bob@example.com', password: 'password456' },
-    { id: 3, name: 'Charlie', email: 'charlie@example.com', password: 'password789' },
-  ];
-
+  const [customers, setCustomers] = useState([]); // Initialize customers with an empty array
+  const blankCustomer = { id: -1, name: '', email: '', password: '' };
   const [selectedCustomer, setSelectedCustomer] = useState(blankCustomer);
   const [formData, setFormData] = useState(blankCustomer);
 
+  // Function to retrieve customers
+  const getCustomers = function() {
+    console.log("in getCustomers()"); // Log message for debugging
+    const initialCustomers = getAll(); // Fetch all customers
+    setCustomers(initialCustomers); // Set the customers state with the retrieved customers
+  };
+
+  // Fetch customers when the component mounts
+  useEffect(() => {
+    getCustomers(); // Call getCustomers to populate customer list
+  }, []); // Empty dependency array means this runs once on mount
+
   const onDeleteClick = () => {
     console.log('onDeleteClick()');
-    // Add logic to delete the selected customer from the list if needed
+    deleteById(selectedCustomer.id); // Delete the selected customer
+    setCustomers(getAll()); // Refresh the customer list
     setSelectedCustomer(blankCustomer);
     setFormData(blankCustomer);
   };
 
   const onSaveClick = () => {
     console.log('onSaveClick()', formData);
-    // Implement save logic here
+    if (selectedCustomer.id === -1) {
+      post(formData); // Add a new customer
+    } else {
+      put(selectedCustomer.id, formData); // Update existing customer
+    }
+    setCustomers(getAll()); // Refresh the customer list
   };
 
   const onCancelClick = () => {
     console.log('onCancelClick()');
-    setSelectedCustomer(blankCustomer); // Reset to no customer selected
-    setFormData(blankCustomer); // Reset form values
+    setSelectedCustomer(blankCustomer);
+    setFormData(blankCustomer);
   };
 
   const handleListClick = (customer) => {
@@ -50,7 +64,6 @@ const App = () => {
   return (
     <div className="App">
       <h1>React App</h1>
-
       <h2>Customers List</h2>
       <table>
         <thead>
