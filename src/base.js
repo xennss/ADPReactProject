@@ -1,23 +1,23 @@
-const baseURL = 'http://localhost:4000/customers'; // Replace with your actual API URL
+const baseURL = "http://localhost:4000/customers";
 
-// Fetch all customers
 export async function getAll(setCustomers) {
   const myInit = {
-    method: 'GET',
-    mode: 'cors',
+    method: "GET",
+    mode: "cors",
   };
-  
-  try {
-    const response = await fetch(baseURL, myInit);
-    if (!response.ok) {
-      throw new Error(`Error fetching data: ${response.status}`);
+  const fetchData = async (url) => {
+    try {
+      const response = await fetch(url, myInit);
+      if (!response.ok) {
+        throw new Error(`Error fetching data: ${response.status}`);
+      }
+      const data = await response.json();
+      setCustomers(data);
+    } catch (error) {
+      alert(error);
     }
-    const data = await response.json();
-    
-    setCustomers(data); // Update state with fetched customers
-  } catch (error) {
-    alert(error);
-  }
+  };
+  fetchData(baseURL);
 }
 
 export function deleteById(id, postOpCallback) {

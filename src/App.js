@@ -13,7 +13,7 @@ const App = () => {
   const [formData, setFormData] = useState(blankCustomer);
 
   // Function to retrieve customers
-  const getCustomers = async () => {
+  const getCustomers =  () => {
     console.log("in getCustomers()"); // Log message for debugging
     getAll(setCustomers); // Fetch all customers
     setFilteredCustomers(customers); // Set filtered customers to all initially
@@ -22,7 +22,8 @@ const App = () => {
   // Fetch customers when the component mounts
   useEffect(() => {
     getCustomers(); // Call getCustomers to populate customer list
-  }, []); // Empty dependency array means this runs once on mount
+
+  }, [selectedCustomer]); // Empty dependency array means this runs once on mount
 
   const onDeleteClick = () => {
     console.log('onDeleteClick()');
@@ -30,33 +31,64 @@ const App = () => {
       console.log('No customer selected for deletion.');
       return; // Exit the function if no customer is selected
     }
-
-    deleteById(selectedCustomer.id); // Delete the selected customer
-    getCustomers(); // Refresh the customer list
-    setSelectedCustomer(blankCustomer);
-    setFormData(blankCustomer);
-    setMode("Add"); // Reset the mode to "Add"
+  
+    // Primero, guarda el ID del cliente que vas a eliminar
+    const idToDelete = selectedCustomer.id;
+  
+    deleteById(idToDelete, () => {
+      // Actualiza el estado después de eliminar el cliente
+      setCustomers(prevCustomers => prevCustomers.filter(customer => customer.id !== idToDelete));
+      setFilteredCustomers(prevFiltered => prevFiltered.filter(customer => customer.id !== idToDelete));
+      setSelectedCustomer(blankCustomer);
+      setFormData(blankCustomer);
+      setMode("Add"); // Reset the mode to "Add"
+    });
   };
+  
 
   const onSaveClick = () => {
     console.log('in onSaveClick()', formData);
+    
+    let postOpCallback = () => {
+      if (mode === "Add") {
+        // Añadir nuevo cliente
+        const newCustomer = { ...formData, id: Date.now() }; // Usa un ID temporal
+        setCustomers(prevCustomers => [...prevCustomers, newCustomer]);
+        setFilteredCustomers(prevFiltered => [...prevFiltered, newCustomer]);
+      } else if (mode === "Update") {
+        // Actualizar cliente existente
+        setCustomers(prevCustomers => 
+          prevCustomers.map(customer => 
+            customer.id === selectedCustomer.id ? { ...formData, id: selectedCustomer.id } : customer
+          )
+        );
+        setFilteredCustomers(prevFiltered => 
+          prevFiltered.map(customer => 
+            customer.id === selectedCustomer.id ? { ...formData, id: selectedCustomer.id } : customer
+          )
+        );
+      }
+      
+      setSelectedCustomer(blankCustomer);
+      setFormData(blankCustomer);
+      setMode("Add"); // Reset the mode to "Add" after saving
+    };
+  
     if (mode === "Add") {
-      post(formData); // Add a new customer
+      post(formData, postOpCallback); // Añadir nuevo cliente
     } else if (mode === "Update") {
-      put(selectedCustomer.id, formData); // Update the existing customer
+      put(selectedCustomer.id, formData, postOpCallback); // Actualizar cliente existente
     }
-    setFormData(blankCustomer); // Clear the form
-    setSelectedCustomer(blankCustomer); // Deselect any selected customer
-    getCustomers(); // Refresh the customer list
-    setMode("Add"); // Optionally reset the mode to "Add" after saving
   };
+  
+  
 
   const onCancelClick = () => {
     console.log('onCancelClick()');
     setSelectedCustomer(blankCustomer);
     setFormData(blankCustomer);
     setMode("Add"); // Reset the mode to "Add" when canceled
-  };
+  }; 
 
   const handleListClick = (customer) => {
     if (selectedCustomer.id === customer.id) {

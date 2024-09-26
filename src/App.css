@@ -2,10 +2,29 @@
   text-align: center;
 }
 
+button {
+  background-color: #52acc5; /* Color de fondo */
+  color: white; /* Color del texto */
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Bordes redondeados */
+  padding: 10px 20px; /* Espaciado interno */
+  cursor: pointer; /* Cambiar el cursor al pasar por encima */
+  transition: background-color 0.3s ease; /* Animación suave para el color de fondo */
+}
+
+button:hover {
+  background-color: #52acc5; /* Color de fondo al pasar el cursor */
+}
+
+button:disabled {
+  background-color: #ccc; /* Color para botones deshabilitados */
+  cursor: not-allowed; /* Cursor de no permitido */
+}
+
 .customer-list-container {
   height: 300px; /* Set a fixed height */
   overflow-y: auto; /* Enable vertical scrolling */
-  border: 1px solid #ccc; /* Optional: Add a border */
+  border: 1px solid #52acc5; /* Optional: Add a border */
   margin-bottom: 20px; /* Optional: Add some space below */
 }
 
@@ -33,7 +52,7 @@ th, td {
 }
 
 th {
-  background-color: #282c34; /* Header background color */
+  background-color: #52acc5; /* Header background color */
   color: white; /* Header text color */
 }
 
@@ -49,7 +68,7 @@ tr:hover {
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #52acc5;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
