@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css'; // Import the CSS file
-import { getAll, deleteById, post, put } from './memdb'; // Import functions from memdb.js
+import { getAll, deleteById, post, put } from './restdb'; // Import functions from memdb.js
 import CustomerList from './customerList'; // Import CustomerList component
 import CustomerAddUpdateForm from './customerAddUpdateForm'; // Import CustomerAddUpdateForm component
 
@@ -15,9 +15,8 @@ const App = () => {
   // Function to retrieve customers
   const getCustomers = async () => {
     console.log("in getCustomers()"); // Log message for debugging
-    const initialCustomers = await getAll(); // Fetch all customers
-    setCustomers(initialCustomers); // Set the customers state
-    setFilteredCustomers(initialCustomers); // Set filtered customers to all initially
+    getAll(setCustomers); // Fetch all customers
+    setFilteredCustomers(customers); // Set filtered customers to all initially
   };
 
   // Fetch customers when the component mounts
