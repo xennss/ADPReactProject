@@ -1,7 +1,17 @@
-// CustomerList.js
-import React from 'react';
+import React, { useState } from 'react';
 
-const CustomerList = ({ customers, handleListClick, selectedCustomer }) => {
+const CustomerList = ({ customers, handleListClick, selectedCustomer, onSearch, onCancelSearch }) => {
+  const [searchTerm, setSearchTerm] = useState(''); // Estado para el término de búsqueda
+
+  const handleSearch = () => {
+    onSearch(searchTerm); // Llama a la función onSearch pasada como prop
+  };
+
+  const handleCancelSearch = () => {
+    setSearchTerm(''); // Limpiar el término de búsqueda
+    onCancelSearch(); // Llama a la función onCancelSearch pasada como prop
+  };
+
   return (
     <div>
       <h2>Customers List</h2>
@@ -31,6 +41,16 @@ const CustomerList = ({ customers, handleListClick, selectedCustomer }) => {
             ))}
           </tbody>
         </table>
+      </div>
+      <div>
+        <input
+          type="text"
+          placeholder="Buscar..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button onClick={handleSearch}>Buscar</button>
+        <button onClick={handleCancelSearch}>Cancelar</button>
       </div>
     </div>
   );

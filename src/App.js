@@ -11,7 +11,6 @@ const App = () => {
   const blankCustomer = { id: -1, name: '', email: '', password: '' };
   const [selectedCustomer, setSelectedCustomer] = useState(blankCustomer);
   const [formData, setFormData] = useState(blankCustomer);
-  const [searchTerm, setSearchTerm] = useState(''); // Initialize search term
 
   // Function to retrieve customers
   const getCustomers = async () => {
@@ -87,7 +86,7 @@ const App = () => {
     setFormData(newFormObject); // Update the state with new form data
   };
 
-  const handleSearch = () => {
+  const handleSearch = (searchTerm) => {
     const filtered = customers.filter(customer =>
       customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customer.email.toLowerCase().includes(searchTerm.toLowerCase())
@@ -96,27 +95,18 @@ const App = () => {
   };
 
   const handleCancelSearch = () => {
-    setSearchTerm(''); // Clear search term
     setFilteredCustomers(customers); // Reset filtered customers to all customers
   };
 
   return (
     <div className="App">
       <h1>React App</h1>
-      <div>
-        <input
-          type="text"
-          placeholder="Buscar..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <button onClick={handleSearch}>Buscar</button>
-        <button onClick={handleCancelSearch}>Cancelar</button>
-      </div>
       <CustomerList
         customers={filteredCustomers} // Use filtered customers
         handleListClick={handleListClick}
         selectedCustomer={selectedCustomer} // Pass selectedCustomer to CustomerList
+        onSearch={handleSearch} // Pass search handler
+        onCancelSearch={handleCancelSearch} // Pass cancel search handler
       />
       <CustomerAddUpdateForm
         mode={mode}
