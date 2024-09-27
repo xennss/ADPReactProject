@@ -1,7 +1,10 @@
 .App {
   font-family: Arial, sans-serif;
   padding: 20px;
+  background-color: #f0f0f0b7; /* Color de fondo */
+  min-height: 100vh; /* Asegura que el fondo cubra toda la altura de la ventana */
 }
+
 
 .container {
   display: flex;
@@ -17,11 +20,11 @@
 }
 
 .customer-list {
-  background-color: #f9f9f9; /* Color de fondo para la lista de clientes */
+  background-color: #f0f0f0b7;  /* Color de fondo para la lista de clientes */
 }
 
 .customer-form {
-  background-color: #ffffff; /* Color de fondo para el formulario */
+   background-color: #f0f0f0b7;  /* Color de fondo para el formulario */
 }
 
 
@@ -66,6 +69,7 @@ table {
   width: 80%;
   margin: 20px auto;
   border-collapse: collapse; /* Remove space between borders */
+  background-color: #f0f0f0b7; 
 }
 
 th, td {
@@ -80,7 +84,7 @@ th {
 }
 
 tr:hover {
-  background-color: #f2f2f2; /* Highlight row on hover */
+  background-color: #c4c9c8; /* Highlight row on hover */
 }
 
 
