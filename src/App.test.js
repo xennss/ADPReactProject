@@ -1,8 +1,17 @@
-import { render, screen } from '@testing-library/react';
+import React from 'react';
+import { render, screen, fireEvent , waitFor} from '@testing-library/react';
 import App from './App';
+import { getAll } from './restdb';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+jest.mock('./restdb');
+
+describe('Add/Update Form Title', () => {
+  test('displays "Add" when no customer is selected', () => {
+    render(<App />);
+    expect(screen.getByRole('heading', { name: /Add Customer/i })).toBeInTheDocument();
+  });
+
+
+ 
+
 });
