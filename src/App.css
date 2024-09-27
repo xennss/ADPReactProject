@@ -83,9 +83,7 @@ th {
   color: white; /* Header text color */
 }
 
-tr:hover {
-  background-color: #c4c9c8; /* Highlight row on hover */
-}
+
 
 
 @media (prefers-reduced-motion: no-preference) {
