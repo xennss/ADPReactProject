@@ -13,10 +13,8 @@ const App = () => {
   const [formData, setFormData] = useState(blankCustomer);
 
   // Function to retrieve customers
-  const getCustomers =  () => {
-    console.log("in getCustomers()"); // Log message for debugging
+  const getCustomers = () => {
     getAll(setCustomers); // Fetch all customers
-    setFilteredCustomers(customers); // Set filtered customers to all initially
   };
 
   // Fetch customers when the component mounts
@@ -130,24 +128,27 @@ const App = () => {
   };
 
   return (
-    <div className="App">
-      <h1>React App</h1>
-      <CustomerList
-        customers={filteredCustomers} // Use filtered customers
-        handleListClick={handleListClick}
-        selectedCustomer={selectedCustomer} // Pass selectedCustomer to CustomerList
-        onSearch={handleSearch} // Pass search handler
-        onCancelSearch={handleCancelSearch} // Pass cancel search handler
-      />
-      <CustomerAddUpdateForm
-        mode={mode}
-        formData={formData}
-        onSaveClick={onSaveClick}
-        onCancelClick={onCancelClick}
-        onDeleteClick={onDeleteClick}
-        handleInputChange={handleInputChange}
-      />
-    </div>
+    <div className="container">
+  <div className="customer-list">
+    <CustomerList
+      customers={filteredCustomers}
+      handleListClick={handleListClick}
+      selectedCustomer={selectedCustomer}
+      onSearch={handleSearch}
+      onCancelSearch={handleCancelSearch}
+    />
+  </div>
+  <div className="customer-form">
+    <CustomerAddUpdateForm
+      mode={mode}
+      formData={formData}
+      onSaveClick={onSaveClick}
+      onCancelClick={onCancelClick}
+      onDeleteClick={onDeleteClick}
+      handleInputChange={handleInputChange}
+    />
+  </div>
+</div>
   );
 };
 
