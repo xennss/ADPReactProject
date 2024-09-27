@@ -16,6 +16,7 @@ const App = () => {
   const getCustomers = () => {
     getAll(setCustomers); // Fetch all customers
   };
+  
 
   // Fetch customers when the component mounts
   useEffect(() => {
